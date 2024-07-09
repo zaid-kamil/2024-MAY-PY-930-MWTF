@@ -4,9 +4,9 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 
-# loading data
 years = list(map(str, range(1980, 2014)))
 
+# loading data
 @st.cache_data
 def load_data():
     df = pd.read_excel("Canada.xlsx", sheet_name=1, skiprows=20, skipfooter=2)
@@ -34,11 +34,13 @@ with st.expander("Show data"):
     st.dataframe(df, use_container_width=True)
 
 countries = df.index.tolist()
-selected_country = st.selectbox("Select a country", 
-    countries)
+selected_country = st.selectbox(
+    "Select a country", 
+    countries
+)
 imm_data = df.loc[selected_country, years]
 # st.write(imm_data)
-fig = px.area(imm_data,
+fig = px.bar(imm_data,
     x=imm_data.index,
     y=imm_data.values)
 st.plotly_chart(fig, use_container_width=True)
