@@ -19,6 +19,11 @@ def load_data():
     df.columns = [str(name).lower() for name in df.columns.tolist()]
     df['total'] = df[years].sum(axis=1)
     df = df.sort_values(by='total', ascending=False)
+    # rename some countries
+    df = df.rename(index={'United Kingdom of Great Britain and Northern Ireland': 'UK'})
+    df = df.rename(index={'Iran (Islamic Republic of)': 'Iran'})
+    df = df.rename(index={'United States of America': 'USA'})
+
     return df
 
 # configure the layout
@@ -76,9 +81,11 @@ c1, c2 = st.columns(2)
 continents = df['continent'].unique().tolist()
 cdf = df.groupby('continent')[years].sum() # group by continent and sum
 cdf['total'] = cdf.sum(axis=1)
-c1.dataframe(cdf, use_container_width=True)
+# c1.dataframe(cdf, use_container_width=True)
 figContinent = px.pie(cdf, names=cdf.index, values='total', 
-                    title="Continent wise Immigration", hole=.5)
+                    title="Continent wise Immigration", 
+                    hole=.5, 
+                    height=500)
 c2.plotly_chart(figContinent, use_container_width=True)
 figMap = px.choropleth(df, 
         locations=df.index, 
@@ -86,6 +93,6 @@ figMap = px.choropleth(df,
         color='total', 
         title="World Map",
         projection='natural earth',
-        width=1000, height=700,
+        width=1200, height=800,
         template='plotly_dark',)   
 st.plotly_chart(figMap, use_container_width=True)
